@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Статистика — Новости ВУЗов</title>
+{% endblock %}
+
+{% block homepage %}
+<section class="statistics-page" aria-labelledby="statistics-heading">
+    <header class="statistics-heading">
+        <p class="eyebrow">Активность читателей</p>
+        <h1 id="statistics-heading">Статистика новостей</h1>
+        <p>Просмотры, отметки «Нравится» и комментарии к публикациям на сайте.</p>
+    </header>
+
+    <div class="statistics-summary">
+        <article class="statistics-card">
+            <span class="statistics-card-label">Новости на сайте</span>
+            <strong>{{ article_count }}</strong>
+        </article>
+        <article class="statistics-card">
+            <span class="statistics-card-label">Уникальные просмотры</span>
+            <strong>{{ total_views if total_views is not none else '—' }}</strong>
+        </article>
+        <article class="statistics-card">
+            <span class="statistics-card-label">Отметки «Нравится»</span>
+            <strong>{{ total_likes if total_likes is not none else '—' }}</strong>
+        </article>
+        <article class="statistics-card">
+            <span class="statistics-card-label">Комментарии</span>
+            <strong>{{ total_comments if total_comments is not none else '—' }}</strong>
+        </article>
+    </div>
+
+    <section class="services-health" aria-labelledby="services-health-heading">
+        <h2 id="services-health-heading">Состояние сервисов</h2>
+        <ul class="services-health-list">
+            {% for service in services_health %}
+            <li class="service-status {{ 'service-available' if service.available else 'service-unavailable' }}">
+                <span>{{ service.name }}</span>
+                <strong>{{ 'Доступен' if service.available else 'Недоступен' }}</strong>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    {% if not statistics_available %}
+    <p class="statistics-unavailable" role="status">
+        Сервис статистики временно недоступен. Список новостей доступен, счётчики появятся после восстановления сервиса.
+    </p>
+    {% endif %}
+
+    <section class="statistics-ranking" aria-labelledby="ranking-heading">
+        <h2 id="ranking-heading">Новости по популярности</h2>
+        <div class="statistics-table-wrap">
+            <table class="statistics-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Новость</th>
+                        <th scope="col">Университет</th>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Просмотры</th>
+                        <th scope="col">Нравится</th>
+                        <th scope="col">Комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for article in articles %}
+                    <tr>
+                        <th scope="row">{{ article.title }}</th>
+                        <td>{{ article.name }}</td>
+                        <td>{{ article.date }}</td>
+                        <td>{{ article.views if article.views is not none else '—' }}</td>
+                        <td>{{ article.likes if article.likes is not none else '—' }}</td>
+                        <td>{{ article.comments if article.comments is not none else '—' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="statistics-empty">Пока нет новостей для статистики.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock homepage %}
